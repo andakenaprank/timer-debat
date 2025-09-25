@@ -72,6 +72,7 @@
     <h1>Timer Debat</h1>
     <button onclick="showPage('first')">Pembicara Pertama</button>
     <button onclick="showPage('normal')">Pembicara Selanjutnya</button>
+    <button onclick="showPage('reply')">Pembicara Balasan</button>
   </div>
 
   <!-- Pembicara Pertama -->
@@ -92,7 +93,18 @@
     <button onclick="startMain()">Mulai Bicara</button>
     <button onclick="startInterrupt()">Mulai Interupsi</button>
     <button onclick="resetNormal()">Reset</button>
+    <button onclick="showPage('reply')">Menuju Pembicara Balasan</button>
     <button onclick="showPage('first')">Kembali ke Pembicara Pertama</button>
+    <button onclick="showPage('menu')">Kembali ke Menu</button>
+  </div>
+
+  <!-- Pembicara Balasan -->
+  <div id="reply" class="page">
+    <h1>Pembicara Balasan</h1>
+    <div id="replyTimer" class="timer">03:00</div>
+    <button onclick="startReply()">Mulai</button>
+    <button onclick="resetReply()">Reset</button>
+    <button onclick="showPage('normal')">Kembali ke Pembicara Selanjutnya</button>
     <button onclick="showPage('menu')">Kembali ke Menu</button>
   </div>
 
@@ -151,6 +163,11 @@
     function startMain() {
       clearInterval(interruptTimer);
       clearInterval(mainTimer);
+
+      // Reset interupsi setiap kali mulai bicara
+      interruptTime = 30;
+      updateInterruptDisplay();
+
       mainTimer = setInterval(() => {
         if (mainTime > 0) {
           mainTime--;
@@ -187,10 +204,39 @@
       updateInterruptDisplay();
     }
 
+    // --- Pembicara Balasan ---
+    let replyTimer, replyTime = 180;
+
+    function updateReplyDisplay() {
+      let m = String(Math.floor(replyTime / 60)).padStart(2,'0');
+      let s = String(replyTime % 60).padStart(2,'0');
+      document.getElementById("replyTimer").textContent = `${m}:${s}`;
+    }
+
+    function startReply() {
+      clearInterval(replyTimer);
+      replyTimer = setInterval(() => {
+        if (replyTime > 0) {
+          replyTime--;
+          updateReplyDisplay();
+        } else {
+          clearInterval(replyTimer);
+          alert("Waktu Pembicara Balasan Habis!");
+        }
+      }, 1000);
+    }
+
+    function resetReply() {
+      clearInterval(replyTimer);
+      replyTime = 180;
+      updateReplyDisplay();
+    }
+
     // Init tampilan
     updateFirstDisplay();
     updateMainDisplay();
     updateInterruptDisplay();
+    updateReplyDisplay();
   </script>
 </body>
 </html>
