@@ -35,26 +35,20 @@
       position: relative;
       z-index: 1;
       text-align: center;
-      background: rgba(255,255,255,0.85);
-      padding: 20px;
-      border-radius: 12px;
-      min-width: 300px;
+      background: rgba(255,255,255,0.9);
+      padding: 25px;
+      border-radius: 16px;
+      min-width: 320px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
     .active { display: flex; }
 
-    h1 { margin-bottom: 20px; }
-
-    button {
-      margin: 8px;
-      padding: 10px 20px;
-      font-size: 18px;
-      cursor: pointer;
-    }
+    h1 { margin-bottom: 15px; }
 
     .timer {
-      font-size: 48px;
-      margin: 20px 0;
+      font-size: 52px;
+      margin: 15px 0;
       font-weight: bold;
     }
 
@@ -64,25 +58,67 @@
       font-weight: bold;
       color: #333;
     }
+
+    /* Tombol utama */
+    .btn {
+      margin: 6px;
+      padding: 10px 20px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: white;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-start { background: #2ecc71; }   /* hijau */
+    .btn-reset { background: #3498db; }   /* biru */
+    .btn-interrupt { background: #e67e22; } /* oranye */
+
+    /* Tombol navigasi */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 15px;
+    }
+    .nav button {
+      flex: 1;
+      margin: 0 5px;
+      padding: 12px;
+      font-size: 20px;
+      border: none;
+      border-radius: 50%;
+      background: #34495e;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .nav button:hover {
+      background: #2c3e50;
+    }
   </style>
 </head>
 <body>
   <!-- Menu -->
   <div id="menu" class="page active">
     <h1>Timer Debat</h1>
-    <button onclick="showPage('first')">Pembicara Pertama</button>
-    <button onclick="showPage('normal')">Pembicara Selanjutnya</button>
-    <button onclick="showPage('reply')">Pembicara Balasan</button>
+    <button class="btn btn-start" onclick="showPage('first')">Pembicara Pertama</button>
+    <button class="btn btn-start" onclick="showPage('normal')">Pembicara Selanjutnya</button>
+    <button class="btn btn-start" onclick="showPage('reply')">Pembicara Balasan</button>
   </div>
 
   <!-- Pembicara Pertama -->
   <div id="first" class="page">
     <h1>Pembicara Pertama</h1>
     <div id="firstTimer" class="timer">03:00</div>
-    <button onclick="startFirst()">Mulai</button>
-    <button onclick="resetFirst()">Reset</button>
-    <button onclick="showPage('normal')">Menuju Pembicara Selanjutnya</button>
-    <button onclick="showPage('menu')">Kembali ke Menu</button>
+    <button class="btn btn-start" onclick="startFirst()">Mulai</button>
+    <button class="btn btn-reset" onclick="resetFirst()">Reset</button>
+    <div class="nav">
+      <button onclick="showPage('menu')">⏫</button>
+      <button onclick="showPage('normal')">▶</button>
+    </div>
   </div>
 
   <!-- Pembicara Selanjutnya -->
@@ -90,22 +126,26 @@
     <h1>Pembicara Selanjutnya</h1>
     <div id="mainTimer" class="timer">05:00</div>
     <div id="interruptTimer" class="subtimer">00:30</div>
-    <button onclick="startMain()">Mulai Bicara</button>
-    <button onclick="startInterrupt()">Mulai Interupsi</button>
-    <button onclick="resetNormal()">Reset</button>
-    <button onclick="showPage('reply')">Menuju Pembicara Balasan</button>
-    <button onclick="showPage('first')">Kembali ke Pembicara Pertama</button>
-    <button onclick="showPage('menu')">Kembali ke Menu</button>
+    <button class="btn btn-start" onclick="startMain()">Mulai Bicara</button>
+    <button class="btn btn-interrupt" onclick="startInterrupt()">Mulai Interupsi</button>
+    <button class="btn btn-reset" onclick="resetNormal()">Reset</button>
+    <div class="nav">
+      <button onclick="showPage('first')">◀</button>
+      <button onclick="showPage('menu')">⏫</button>
+      <button onclick="showPage('reply')">▶</button>
+    </div>
   </div>
 
   <!-- Pembicara Balasan -->
   <div id="reply" class="page">
     <h1>Pembicara Balasan</h1>
     <div id="replyTimer" class="timer">03:00</div>
-    <button onclick="startReply()">Mulai</button>
-    <button onclick="resetReply()">Reset</button>
-    <button onclick="showPage('normal')">Kembali ke Pembicara Selanjutnya</button>
-    <button onclick="showPage('menu')">Kembali ke Menu</button>
+    <button class="btn btn-start" onclick="startReply()">Mulai</button>
+    <button class="btn btn-reset" onclick="resetReply()">Reset</button>
+    <div class="nav">
+      <button onclick="showPage('normal')">◀</button>
+      <button onclick="showPage('menu')">⏫</button>
+    </div>
   </div>
 
   <script>
@@ -116,13 +156,11 @@
 
     // --- Pembicara Pertama ---
     let firstTimer, firstTime = 180;
-
     function updateFirstDisplay() {
       let m = String(Math.floor(firstTime / 60)).padStart(2,'0');
       let s = String(firstTime % 60).padStart(2,'0');
       document.getElementById("firstTimer").textContent = `${m}:${s}`;
     }
-
     function startFirst() {
       clearInterval(firstTimer);
       firstTimer = setInterval(() => {
@@ -138,7 +176,6 @@
         }
       }, 1000);
     }
-
     function resetFirst() {
       clearInterval(firstTimer);
       firstTime = 180;
@@ -148,26 +185,20 @@
     // --- Pembicara Selanjutnya ---
     let mainTimer, interruptTimer;
     let mainTime = 300, interruptTime = 30;
-
     function updateMainDisplay() {
       let m = String(Math.floor(mainTime / 60)).padStart(2,'0');
       let s = String(mainTime % 60).padStart(2,'0');
       document.getElementById("mainTimer").textContent = `${m}:${s}`;
     }
-
     function updateInterruptDisplay() {
       let s = String(interruptTime).padStart(2,'0');
       document.getElementById("interruptTimer").textContent = `00:${s}`;
     }
-
     function startMain() {
       clearInterval(interruptTimer);
       clearInterval(mainTimer);
-
-      // Reset interupsi setiap kali mulai bicara
       interruptTime = 30;
       updateInterruptDisplay();
-
       mainTimer = setInterval(() => {
         if (mainTime > 0) {
           mainTime--;
@@ -178,7 +209,6 @@
         }
       }, 1000);
     }
-
     function startInterrupt() {
       clearInterval(mainTimer);
       clearInterval(interruptTimer);
@@ -194,7 +224,6 @@
         }
       }, 1000);
     }
-
     function resetNormal() {
       clearInterval(mainTimer);
       clearInterval(interruptTimer);
@@ -206,13 +235,11 @@
 
     // --- Pembicara Balasan ---
     let replyTimer, replyTime = 180;
-
     function updateReplyDisplay() {
       let m = String(Math.floor(replyTime / 60)).padStart(2,'0');
       let s = String(replyTime % 60).padStart(2,'0');
       document.getElementById("replyTimer").textContent = `${m}:${s}`;
     }
-
     function startReply() {
       clearInterval(replyTimer);
       replyTimer = setInterval(() => {
@@ -225,7 +252,6 @@
         }
       }, 1000);
     }
-
     function resetReply() {
       clearInterval(replyTimer);
       replyTime = 180;
