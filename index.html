@@ -26,6 +26,7 @@
     .main { background: #4caf50; color: white; }
     .interrupt { background: #f44336; color: white; }
     .reset { background: #555; color: white; }
+    .first { background: #2196f3; color: white; }
   </style>
 </head>
 <body>
@@ -33,11 +34,12 @@
 
   <!-- Timer Utama -->
   <div class="timer" id="mainTimer">05:00</div>
-  <button class="main" onclick="startMain()">Mulai Bicara</button>
+  <button class="first" onclick="startFirst()">Pembicara Pertama (3 menit)</button>
+  <button class="main" onclick="startMain()" disabled>Mulai Bicara</button>
 
   <!-- Timer Interupsi -->
   <div class="timer" id="interruptTimer">00:30</div>
-  <button class="interrupt" onclick="startInterrupt()">Mulai Interupsi</button>
+  <button class="interrupt" onclick="startInterrupt()" disabled>Mulai Interupsi</button>
 
   <!-- Tombol Reset -->
   <div>
@@ -45,14 +47,44 @@
   </div>
 
   <script>
-    let mainTime = 300;       // 5 menit = 300 detik
+    let mainTime = 300;       // 5 menit
     let interruptTime = 30;   // 30 detik
-    let mainInterval, interruptInterval;
+    let firstTime = 180;      // 3 menit pembicara pertama
+    let mainInterval, interruptInterval, firstInterval;
 
     function formatTime(sec) {
       let m = Math.floor(sec / 60);
       let s = sec % 60;
       return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+
+    function startFirst() {
+      resetTimers();
+      document.getElementById("mainTimer").innerText = formatTime(firstTime);
+
+      clearInterval(firstInterval);
+      firstInterval = setInterval(() => {
+        if (firstTime > 0) {
+          firstTime--;
+          document.getElementById("mainTimer").innerText = formatTime(firstTime);
+        } else {
+          clearInterval(firstInterval);
+          alert("Waktu habis untuk pembicara pertama!");
+          enableNextSpeakers();
+        }
+      }, 1000);
+    }
+
+    function enableNextSpeakers() {
+      // aktifkan tombol bicara & interupsi
+      document.querySelector(".main").disabled = false;
+      document.querySelector(".interrupt").disabled = false;
+
+      // set ulang timer ke mode normal
+      mainTime = 300;
+      interruptTime = 30;
+      document.getElementById("mainTimer").innerText = formatTime(mainTime);
+      document.getElementById("interruptTimer").innerText = formatTime(interruptTime);
     }
 
     function startMain() {
@@ -90,10 +122,16 @@
     function resetTimers() {
       clearInterval(mainInterval);
       clearInterval(interruptInterval);
+      clearInterval(firstInterval);
       mainTime = 300;
       interruptTime = 30;
+      firstTime = 180;
       document.getElementById("mainTimer").innerText = formatTime(mainTime);
       document.getElementById("interruptTimer").innerText = formatTime(interruptTime);
+
+      // lock tombol bicara & interupsi lagi
+      document.querySelector(".main").disabled = true;
+      document.querySelector(".interrupt").disabled = true;
     }
   </script>
 </body>
