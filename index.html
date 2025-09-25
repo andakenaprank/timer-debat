@@ -38,7 +38,7 @@
       background: rgba(255,255,255,0.9);
       padding: 25px;
       border-radius: 16px;
-      min-width: 320px;
+      min-width: 360px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
@@ -47,26 +47,27 @@
     h1 { margin-bottom: 15px; }
 
     .timer {
-      font-size: 52px;
-      margin: 15px 0;
+      font-size: 100px;   /* diperbesar */
+      margin: 20px 0;
       font-weight: bold;
+      letter-spacing: 2px;
     }
 
     .subtimer {
-      font-size: 28px;
-      margin: 10px 0;
+      font-size: 50px;    /* diperbesar */
+      margin: 10px 0 20px 0;
       font-weight: bold;
       color: #333;
     }
 
     /* Tombol utama */
     .btn {
-      margin: 6px;
-      padding: 10px 20px;
-      font-size: 18px;
+      margin: 8px;
+      padding: 12px 24px;
+      font-size: 20px;
       font-weight: bold;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       transition: 0.2s;
       color: white;
@@ -79,15 +80,15 @@
     /* Tombol navigasi */
     .nav {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
+      gap: 20px;
       width: 100%;
-      margin-top: 15px;
+      margin-top: 20px;
     }
     .nav button {
-      flex: 1;
-      margin: 0 5px;
-      padding: 12px;
-      font-size: 20px;
+      width: 60px;
+      height: 60px;
+      font-size: 26px;
       border: none;
       border-radius: 50%;
       background: #34495e;
@@ -125,7 +126,7 @@
   <div id="normal" class="page">
     <h1>Pembicara Selanjutnya</h1>
     <div id="mainTimer" class="timer">05:00</div>
-    <div id="interruptTimer" class="subtimer">00:20</div>
+    <div id="interruptTimer" class="subtimer">00:30</div>
     <button class="btn btn-start" onclick="startMain()">Mulai Bicara</button>
     <button class="btn btn-interrupt" onclick="startInterrupt()">Mulai Interupsi</button>
     <button class="btn btn-reset" onclick="resetNormal()">Reset</button>
