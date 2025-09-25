@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Timer Debat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      background: #f8f8f8;
+    }
+    .timer {
+      font-size: 5em;
+      margin: 20px 0;
+      color: #222;
+    }
+    button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .main { background: #4caf50; color: white; }
+    .interrupt { background: #f44336; color: white; }
+    .reset { background: #555; color: white; }
+  </style>
+</head>
+<body>
+  <h1>Timer Debat</h1>
+
+  <!-- Timer Utama -->
+  <div class="timer" id="mainTimer">05:00</div>
+  <button class="main" onclick="startMain()">Mulai Bicara</button>
+
+  <!-- Timer Interupsi -->
+  <div class="timer" id="interruptTimer">00:30</div>
+  <button class="interrupt" onclick="startInterrupt()">Mulai Interupsi</button>
+
+  <!-- Tombol Reset -->
+  <div>
+    <button class="reset" onclick="resetTimers()">Reset</button>
+  </div>
+
+  <script>
+    let mainTime = 300;       // 5 menit = 300 detik
+    let interruptTime = 30;   // 30 detik
+    let mainInterval, interruptInterval;
+
+    function formatTime(sec) {
+      let m = Math.floor(sec / 60);
+      let s = sec % 60;
+      return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+
+    function startMain() {
+      clearInterval(interruptInterval);
+      interruptInterval = null;
+
+      clearInterval(mainInterval);
+      mainInterval = setInterval(() => {
+        if (mainTime > 0) {
+          mainTime--;
+          document.getElementById("mainTimer").innerText = formatTime(mainTime);
+        } else {
+          clearInterval(mainInterval);
+          alert("Waktu bicara habis!");
+        }
+      }, 1000);
+    }
+
+    function startInterrupt() {
+      clearInterval(mainInterval);
+      mainInterval = null;
+
+      clearInterval(interruptInterval);
+      interruptInterval = setInterval(() => {
+        if (interruptTime > 0) {
+          interruptTime--;
+          document.getElementById("interruptTimer").innerText = formatTime(interruptTime);
+        } else {
+          clearInterval(interruptInterval);
+          alert("Waktu interupsi habis!");
+        }
+      }, 1000);
+    }
+
+    function resetTimers() {
+      clearInterval(mainInterval);
+      clearInterval(interruptInterval);
+      mainTime = 300;
+      interruptTime = 30;
+      document.getElementById("mainTimer").innerText = formatTime(mainTime);
+      document.getElementById("interruptTimer").innerText = formatTime(interruptTime);
+    }
+  </script>
+</body>
+</html>
